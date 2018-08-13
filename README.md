@@ -1,4 +1,5 @@
 # Trabajo Tarjeta: Versión 2018
+# Marcos Cassinerio y Lautaro Garavano
 
 El siguiente trabajo es un enunciado iterativo. Todas las semanas nuevos
 requerimientos serán agregados y/o modificados para ilustrar la dinámica de

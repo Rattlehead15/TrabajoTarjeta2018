@@ -33,4 +33,10 @@ class Tarjeta implements TarjetaInterface {
       return $this->saldo;
     }
 
+    /**
+     * Reduce el saldo segun la cantidad especificada
+     */
+    public function reducirSaldo($monto){
+      $this->saldo -= $monto;
+    }
 }

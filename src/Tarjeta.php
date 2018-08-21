@@ -4,7 +4,7 @@ namespace TrabajoTarjeta;
 
 class Tarjeta implements TarjetaInterface {
     protected $saldo;
-    protected $plus;
+    protected $plus = 0;
 
     public function recargar($monto) {
       //Chequea si es alguno de los valores aceptados que no cargan dinero extra

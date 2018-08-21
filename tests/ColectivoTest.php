@@ -11,6 +11,7 @@ class ColectivoTest extends TestCase {
         $tarjeta = new Tarjeta();
         $tarjeta->recargar(20);
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($tarjeta->obtenerPlus(), 0);
     }
 
     public function testPagarSinSaldo() {
@@ -18,7 +19,9 @@ class ColectivoTest extends TestCase {
         $tarjeta = new Tarjeta();
         $tarjeta->recargar(10);
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($tarjeta->obtenerPlus(), 1);
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($tarjeta->obtenerPlus(), 2);
         $this->assertEquals($bondi->pagarCon($tarjeta), false);
         $this->assertEquals($tarjeta->obtenerPlus(), 2);
     }

@@ -18,5 +18,8 @@ class ColectivoTest extends TestCase {
         $tarjeta = new Tarjeta();
         $tarjeta->recargar(10);
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($bondi->pagarCon($tarjeta), false);
+        $this->assertEquals($tarjeta->obtenerPlus(), 2);
     }
 }

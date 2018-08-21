@@ -4,6 +4,7 @@ namespace TrabajoTarjeta;
 
 class Tarjeta implements TarjetaInterface {
     protected $saldo;
+    //Que la variable plus comience desde 0 se refiere a que todavia no se a usado ningun viaje plus
     protected $plus = 0;
 
     public function recargar($monto) {

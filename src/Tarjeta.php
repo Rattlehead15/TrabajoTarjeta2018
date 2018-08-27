@@ -4,8 +4,10 @@ namespace TrabajoTarjeta;
 
 class Tarjeta implements TarjetaInterface {
     protected $saldo;
-    //Que la variable plus comience desde 0 se refiere a que todavia no se a usado ningun viaje plus
+    //Que la variable plus comience desde 0 se refiere a que todavia no se ha usado ningun viaje plus
     protected $plus = 0;
+
+    public $precio = 14.80;
 
     public function recargar($monto) {
       //Chequea si es alguno de los valores aceptados que no cargan dinero extra
@@ -49,6 +51,11 @@ class Tarjeta implements TarjetaInterface {
      */
     public function obtenerSaldo() {
       return $this->saldo;
+    }
+
+
+    public function bajarSaldo(){
+      $this->saldo -= $this->precio;
     }
 
     /**

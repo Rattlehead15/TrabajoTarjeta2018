@@ -20,15 +20,11 @@ class Colectivo implements ColectivoInterface{
     }
 
     public function pagarCon(TarjetaInterface $tarjeta){
-        if($tarjeta->obtenerSaldo() >= 14.80){
+        if($tarjeta->puedePagar()){
             return new Boleto(14.80, $this, $tarjeta);
         }
         else{
-            if($tarjeta->obtenerPlus() != 2){
-                $tarjeta->aumentarPlus();
-                return new Boleto(14.80, $this, $tarjeta);
-            }
+            return false;
         }
-        return false;
     }
 }

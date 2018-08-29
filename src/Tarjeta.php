@@ -67,4 +67,21 @@ class Tarjeta implements TarjetaInterface {
     public function aumentarPlus(){
       $this->plus ++;
     }
+
+    /**
+     * Retorna true si puede pagar o false en saco contrario.
+     * 
+     */
+    public function puedePagar(){
+      if($this->obtenerSaldo() >= 14.80){
+        return true;
+      }
+      else{
+        if($this->obtenerPlus() != 2){
+          $this->aumentarPlus();
+            return true;
+        }
+      }
+      return false;
+    }
 }

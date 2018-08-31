@@ -81,6 +81,7 @@ class Tarjeta implements TarjetaInterface {
      */
     public function puedePagar(){
       if($this->obtenerSaldo() >= 14.80){
+        $this->bajarSaldo();
         return true;
       }
       else{

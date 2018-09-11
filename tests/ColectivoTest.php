@@ -16,9 +16,9 @@ class ColectivoTest extends TestCase {
     
     public function testInfoColectivo(){
         $colectivo = new Colectivo();
-        $this->assertEquals($colectivo->linea, NULL);
-        $this->assertEquals($colectivo->empresa, NULL);
-        $this->assertEquals($colectivo->numero, NULL);
+        $this->assertEquals($colectivo->linea(), NULL);
+        $this->assertEquals($colectivo->empresa(), NULL);
+        $this->assertEquals($colectivo->numero(), NULL);
     }
     
     public function testPagarSinSaldo() {

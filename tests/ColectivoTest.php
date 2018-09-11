@@ -13,16 +13,30 @@ class ColectivoTest extends TestCase {
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
         $this->assertEquals($tarjeta->obtenerPlus(), 0);
     }
-
+    
+    public function testInfoColectivo(){
+        $colectivo = new Colectivo();
+        $this->assertEquals($colectivo->linea(), NULL);
+        $this->assertEquals($colectivo->empresa(), NULL);
+        $this->assertEquals($colectivo->numero(), NULL);
+    }
+    
     public function testPagarSinSaldo() {
         $bondi = new Colectivo();
         $tarjeta = new Tarjeta();
-        $tarjeta->recargar(10);
+        $tarjeta->recargar(20);
+        $valordebido = 20 - $tarjeta->precio;
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($tarjeta->obtenerSaldo(), $valordebido);
+        $this->assertEquals($tarjeta->obtenerPlus(), 0);
+        $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($tarjeta->obtenerSaldo(), $valordebido);
         $this->assertEquals($tarjeta->obtenerPlus(), 1);
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
+        $this->assertEquals($tarjeta->obtenerSaldo(), $valordebido);
         $this->assertEquals($tarjeta->obtenerPlus(), 2);
         $this->assertEquals($bondi->pagarCon($tarjeta), false);
+        $this->assertEquals($tarjeta->obtenerSaldo(), $valordebido);
         $this->assertEquals($tarjeta->obtenerPlus(), 2);
     }
 }

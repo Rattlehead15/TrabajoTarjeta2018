@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Rattlehead15/TrabajoTarjeta2018.svg?branch=master)](https://travis-ci.org/Rattlehead15/TrabajoTarjeta2018)
+[![Coverage Status](https://coveralls.io/repos/github/Rattlehead15/TrabajoTarjeta2018/badge.svg?branch=master)](https://coveralls.io/github/Rattlehead15/TrabajoTarjeta2018?branch=master)
 # Trabajo Tarjeta: Versión 2018 - Marcos Cassinerio y Lautaro Garavano
 
 El siguiente trabajo es un enunciado iterativo. Todas las semanas nuevos

@@ -13,7 +13,14 @@ class ColectivoTest extends TestCase {
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta));
         $this->assertEquals($tarjeta->obtenerPlus(), 0);
     }
-
+    
+    public function testInfoColectivo(){
+        $colectivo = new Colectivo();
+        $this->assertEquals($colectivo->linea, NULL);
+        $this->assertEquals($colectivo->empresa, NULL);
+        $this->assertEquals($colectivo->numero, NULL);
+    }
+    
     public function testPagarSinSaldo() {
         $bondi = new Colectivo();
         $tarjeta = new Tarjeta();

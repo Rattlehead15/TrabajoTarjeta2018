@@ -86,7 +86,7 @@ class Tarjeta implements TarjetaInterface {
    */
   public function puedePagar(){
     if($this->obtenerSaldo() >= $this->precio){
-      switch($this->obtenerPlus){
+      switch($this->obtenerPlus()){
         case 0:
           $this->bajarSaldo();
           return "normal";
@@ -95,6 +95,7 @@ class Tarjeta implements TarjetaInterface {
           if($this->obtenerSaldo() >= $this->precio * 2){
             $this->bajarSaldo();
             $this->bajarSaldo();
+            $this->plus--;
             return "paga un plus";
           }else{
             $this->bajarSaldo();
@@ -106,10 +107,12 @@ class Tarjeta implements TarjetaInterface {
             $this->bajarSaldo();
             $this->bajarSaldo();
             $this->bajarSaldo();
+            $this->plus-=2;
             return "paga dos plus";
           }else if($this->obtenerSaldo() >= $this->precio * 2){
             $this->bajarSaldo();
             $this->bajarSaldo();
+            $this->plus--;
             return "paga un plus";
           }else{
             $this->bajarSaldo();

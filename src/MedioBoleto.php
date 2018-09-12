@@ -3,5 +3,7 @@
 namespace TrabajoTarjeta;
 
 class MedioBoleto extends Tarjeta {
-    public $precio = 7.40;
+    public function __construct(){
+        $this->precio = ( (new Tarjeta())->precio ) / 2;
+    }
 }

@@ -14,18 +14,18 @@ class Boleto implements BoletoInterface {
 
     protected $descripcion;
 
-    public function __construct($valor, $colectivo, $tarjeta, $fecha, $tipo) {
+    public function __construct($valor, $colectivo, $tarjeta, $fecha, $tipoPago) {
         $this->valor = $valor;
         $this->colectivo = $colectivo;
         $this->tarjeta = $tarjeta;
         $this->fecha = $fecha;
-        switch($tipo){
-            case "normal":
-                $this->descripcion = "Paga 1 viaje normal";
+        switch($tipoPago){
+            case "un plus":
+                $this->descripcion = "Abona viaje plus ".$valor." y";
                 break;
-            case "plus":
-                $this->descripcion = "Viaje plus";
-                break; 
+            case "dos plus":
+                $this->descripcion = "Abona viajes plus ".($valor*2)." y";
+                break;
         }
 
     }

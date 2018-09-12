@@ -77,19 +77,51 @@ class Tarjeta implements TarjetaInterface {
   }
 
   /**
-   * Retorna "normal" si puede pagar normalmente, "plus" si paga con un viaje plus, o "no" en caso contrario,
+   * Retorna "normal" si puede pagar normalmente,
+   * "plus" si paga con un viaje plus,
+   * "paga un plus" si paga con saldo y ademas abona un plus,
+   * "paga dos plus" si abona dos,
+   * o "no" en caso contrario,
    * y si puede pagar baja el saldo o los viajes plus de la tarjeta.
-   * 
    */
   public function puedePagar(){
     if($this->obtenerSaldo() >= $this->precio){
-      $this->bajarSaldo();
-      return "normal";
+      switch($this->obtenerPlus){
+        case 0:
+          $this->bajarSaldo();
+          return "normal";
+          break;
+        case 1:
+          if($this->obtenerSaldo() >= $this->precio * 2){
+            $this->bajarSaldo();
+            $this->bajarSaldo();
+            return "paga un plus";
+          }else{
+            $this->bajarSaldo();
+            return "normal";
+          }
+          break;
+        case 2:
+          if($this->obtenerSaldo() >= $this->precio * 3){
+            $this->bajarSaldo();
+            $this->bajarSaldo();
+            $this->bajarSaldo();
+            return "paga dos plus";
+          }else if($this->obtenerSaldo() >= $this->precio * 2){
+            $this->bajarSaldo();
+            $this->bajarSaldo();
+            return "paga un plus";
+          }else{
+            $this->bajarSaldo();
+            return "normal";
+          }
+        
+      }
     }
     else{
       if($this->obtenerPlus() != 2){
         $this->aumentarPlus();
-          return "plus";
+          return "usa plus";
       }
     }
     return "no";

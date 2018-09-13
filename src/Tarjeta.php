@@ -10,6 +10,8 @@ class Tarjeta implements TarjetaInterface {
 
   public $precio = 14.80;
 
+  public $tiempo;
+
   public function recargar($monto) {
     //Chequea si es alguno de los valores aceptados que no cargan dinero extra
     if($monto == 10 || $monto == 20 || $monto == 30 || $monto == 50 || $monto == 100){

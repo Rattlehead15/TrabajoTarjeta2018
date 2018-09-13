@@ -48,6 +48,12 @@ class TarjetaTest extends TestCase {
         $normal->aumentarPlus();
         $this->assertNotEquals(false, $colectivo->pagarCon($normal));
         $this->assertEquals($normal->obtenerPlus(), 1);
+        $normal = new Tarjeta();
+        $normal->recargar(20);
+        $normal->aumentarPlus();
+        $normal->aumentarPlus();
+        $this->assertNotEquals(false, $colectivo->pagarCon($normal));
+        $this->assertEquals($normal->obtenerPlus(), 2);
     }
 
     /**

@@ -120,7 +120,6 @@ class Tarjeta implements TarjetaInterface {
             $this->bajarSaldo();
             return "normal";
           }
-          break;
       }
     }
     else{

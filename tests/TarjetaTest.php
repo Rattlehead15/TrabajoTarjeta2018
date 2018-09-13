@@ -21,6 +21,10 @@ class TarjetaTest extends TestCase {
         $this->assertEquals($tarjeta->obtenerPlus(), 2);
         $tarjeta->recargar(100);
         $this->assertEquals($tarjeta->obtenerPlus(), 0);
+        $tarjeta = new Tarjeta();
+        $tarjeta->aumentarPlus();
+        $tarjeta->aumentarPlus();
+        $tarjeta->recargar(30);
     }
 
     /**

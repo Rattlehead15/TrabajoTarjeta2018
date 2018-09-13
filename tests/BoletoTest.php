@@ -7,10 +7,10 @@ use PHPUnit\Framework\TestCase;
 class BoletoTest extends TestCase {
 
     public function testMensajesBoletos() {
-        $valor = 14.80;
         $tiempo = new TiempoFalso(0);
         $colectivo = new Colectivo("K", "Empresa genérica", 3, $tiempo);
         $tarjeta = new Tarjeta();
+        $valor = $tarjeta->precio;
         $tarjeta->recargar(100);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals($boleto->obtenerColectivo(), $colectivo);

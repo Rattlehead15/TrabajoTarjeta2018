@@ -9,8 +9,8 @@ class ColectivoTest extends TestCase {
     public function testPagarConSaldo() {
         $bondi = new Colectivo("K", "Empresa generica", 3, new TiempoFalso(0));
         $tarjeta = new Tarjeta();
-        $tarjeta->recargar(20);
-        $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta, $bondi->tiempo(), "normal"));
+        $tarjeta->recargar(100);
+        $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto($tarjeta->precio, $bondi, $tarjeta, $bondi->tiempo(), "normal"));
         $this->assertEquals($tarjeta->obtenerPlus(), 0);
     }
     
@@ -26,7 +26,7 @@ class ColectivoTest extends TestCase {
         $tarjeta = new Tarjeta();
         $tarjeta->recargar(20);
         $valordebido = 20 - $tarjeta->precio;
-        $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(14.80, $bondi, $tarjeta, $bondi->tiempo(), "normal"));
+        $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto($tarjeta->precio, $bondi, $tarjeta, $bondi->tiempo(), "normal"));
         $this->assertEquals($tarjeta->obtenerSaldo(), $valordebido);
         $this->assertEquals($tarjeta->obtenerPlus(), 0);
         $this->assertEquals($bondi->pagarCon($tarjeta), new Boleto(0, $bondi, $tarjeta, $bondi->tiempo(), "usa plus"));

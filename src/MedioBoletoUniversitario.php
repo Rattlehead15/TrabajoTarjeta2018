@@ -21,30 +21,100 @@ class MedioBoletoUniversitario extends Tarjeta {
         if($this->viajesDiarios<2){
             if(($this->tiempo->time()-$this->anteriorTiempo->time())>300 || $this->anteriorTiempo == NULL) {
                 if($this->obtenerSaldo() >= $this->precio){
-                    $this->bajarSaldo();
-                    $this->anteriorTiempo = $this->tiempo->time();
-                    return "normal";
+                    switch($this->obtenerPlus()){
+                      case 0:
+                        $this->bajarSaldo();
+                        return "normal";
+                        break;
+                      case 1:
+                        if($this->obtenerSaldo() >= $this->precio * 2){
+                          $this->bajarSaldo();
+                          $this->bajarSaldo();
+                          $this->plus--;
+                          return "paga un plus";
+                        }else{
+                          $this->bajarSaldo();
+                          return "normal";
+                        }
+                        break;
+                      case 2:
+                        if($this->obtenerSaldo() >= $this->precio * 3){
+                          $this->bajarSaldo();
+                          $this->bajarSaldo();
+                          $this->bajarSaldo();
+                          $this->plus-=2;
+                          return "paga dos plus";
+                        }else if($this->obtenerSaldo() >= $this->precio * 2){
+                          $this->bajarSaldo();
+                          $this->bajarSaldo();
+                          $this->plus--;
+                          return "paga un plus";
+                        }else{
+                          $this->bajarSaldo();
+                          return "normal";
+                        }
+                        break;
+                    }
                 }
                 else{
                     if($this->obtenerPlus() != 2){
                         $this->aumentarPlus();
-                        return "plus";
+                        return "usa plus";
                     }
                 }
                 return "no";
             }
         }
         else{
-            if($this->obtenerSaldo() >= $this->precio){
-                $this->bajarSaldo();
-                $this->bajarSaldo();
-                $this->anteriorTiempo = $this->tiempo->time();
-                return "normal";
+            if($this->obtenerSaldo() >= $this->precio * 2){
+                switch($this->obtenerPlus()){
+                  case 0:
+                    $this->bajarSaldo();
+                    $this->bajarSaldo();
+                    return "normal";
+                    break;
+                  case 1:
+                    if($this->obtenerSaldo() >= $this->precio * 4){
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->plus--;
+                      return "paga un plus";
+                    }else{
+                      $this->bajarSaldo();
+                      return "normal";
+                    }
+                    break;
+                  case 2:
+                    if($this->obtenerSaldo() >= $this->precio * 6){
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->plus-=2;
+                      return "paga dos plus";
+                    }else if($this->obtenerSaldo() >= $this->precio * 4){
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      $this->plus--;
+                      return "paga un plus";
+                    }else{
+                      $this->bajarSaldo();
+                      $this->bajarSaldo();
+                      return "normal";
+                    }
+                    break;
+                }
             }
             else{
                 if($this->obtenerPlus() != 2){
                     $this->aumentarPlus();
-                    return "plus";
+                    return "usa plus";
                 }
             }
             return "no";

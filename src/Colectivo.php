@@ -47,6 +47,7 @@ class Colectivo implements ColectivoInterface{
                 break;
             case "no":
                 return false;
+                break;
         }
     }
 }

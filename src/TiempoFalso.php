@@ -6,7 +6,7 @@ class TiempoFalso implements TiempoInterface{
         $this->time = $iniciar;
     }
     public function avanzar($segundos){
-        $this->time += segundos;
+        $this->time += $segundos;
     }
     public function time(){
         return $this->time;

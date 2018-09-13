@@ -35,6 +35,17 @@ class MedioBoletoUniversitario extends Tarjeta {
             }
         }
         else{
+            if($this->obtenerSaldo() >= $this->precio){
+                parent::$this->bajarSaldo();
+                $this->anteriorTiempo = $this->tiempo->time();
+                return "normal";
+            }
+            else{
+                if($this->obtenerPlus() != 2){
+                    parent::$this->aumentarPlus();
+                    return "plus";
+                }
+            }
             return "no";
         }
     }

@@ -2,7 +2,7 @@
 
 namespace TrabajoTarjeta;
 
-class MedioBoletoEstidiantil extends Tarjeta {
+class MedioBoletoEstudiantil extends Tarjeta {
 
     protected $anteriorTiempo;
 

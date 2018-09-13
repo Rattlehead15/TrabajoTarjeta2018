@@ -7,6 +7,46 @@ use PHPUnit\Framework\TestCase;
 class TarjetaTest extends TestCase {
 
     /**
+     * Comprueba que la tarjeta restaure sus viajes plus al recargarla
+     */
+    public function testCargaPlus() {
+        $tarjeta = new Tarjeta;
+        $tarjeta->aumentarPlus();
+        $this->assertEquals($tarjeta->obtenerPlus(), 1);
+        $tarjeta->recargar(100);
+        $this->assertEquals($tarjeta->obtenerPlus(), 0);
+        $tarjeta->aumentarPlus();
+        $this->assertEquals($tarjeta->obtenerPlus(), 1);
+        $tarjeta->aumentarPlus();
+        $this->assertEquals($tarjeta->obtenerPlus(), 2);
+        $tarjeta->recargar(100);
+        $this->assertEquals($tarjeta->obtenerPlus(), 0);
+    }
+
+    /**
+     * Testea que te deje pagar los plus que debés correctamente
+     */
+    public function testPagarPlus() {
+        $tiempo = new TiempoFalso(0);
+        $colectivo = new Colectivo("K","Empresa genérica",3,$tiempo);
+        $normal = new Tarjeta();
+        $normal->recargar(20);
+        $normal->aumentarPlus();
+        $this->assertNotEquals(false,$colectivo->pagarCon($normal));
+        $normal = new Tarjeta();
+        $normal->recargar(20);
+        $normal->aumentarPlus();
+        $normal->aumentarPlus();
+        $this->assertNotEquals(false, $colectivo->pagarCon($normal));
+        $normal = new Tarjeta();
+        $normal->recargar(30);
+        $normal->aumentarPlus();
+        $normal->aumentarPlus();
+        $this->assertNotEquals(false, $colectivo->pagarCon($normal));
+        $this->assertEquals($normal->obtenerPlus(), 1);
+    }
+
+    /**
      * Comprueba que la tarjeta aumenta su saldo cuando se carga saldo válido.
      */
     public function testCargaSaldo() {

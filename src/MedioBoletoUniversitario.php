@@ -6,7 +6,7 @@ class MedioBoletoUniversitario extends Tarjeta {
 
     protected $anteriorTiempo = NULL;
 
-    public $viajesDiarios = 0;
+    protected $viajesDiarios = 0;
 
     protected $diaAnterior = NULL;
 
@@ -25,63 +25,12 @@ class MedioBoletoUniversitario extends Tarjeta {
             $this->precio = ((new Tarjeta())->precio) / 2;
         }
         if( ($diferencia>=300) || $this->anteriorTiempo === NULL) {
-            if($this->obtenerSaldo() >= $this->precio){
-                switch($this->obtenerPlus()){
-                    case 0:
-                        $this->bajarSaldo();
-                        $this->anteriorTiempo = $actual;
-                        $this->viajesDiarios++;
-                        return "normal";
-                        break;
-                    case 1:
-                        if($this->obtenerSaldo() >= $this->precio * 2){
-                            $this->bajarSaldo();
-                            $this->bajarSaldo();
-                            $this->plus--;
-                            $this->anteriorTiempo = $actual;
-                            $this->viajesDiarios++;
-                            return "paga un plus";
-                        }else{
-                            $this->bajarSaldo();
-                            $this->anteriorTiempo = $actual;
-                            $this->viajesDiarios++;
-                            return "normal";
-                        }
-                        break;
-                    case 2:
-                        if($this->obtenerSaldo() >= $this->precio * 3){
-                            $this->bajarSaldo();
-                            $this->bajarSaldo();
-                            $this->bajarSaldo();
-                            $this->plus-=2;
-                            $this->anteriorTiempo = $actual;
-                            $this->viajesDiarios++;
-                            return "paga dos plus";
-                        }else if($this->obtenerSaldo() >= $this->precio * 2){
-                            $this->bajarSaldo();
-                            $this->bajarSaldo();
-                            $this->plus--;
-                            $this->anteriorTiempo = $actual;
-                            $this->viajesDiarios++;
-                            return "paga un plus";
-                        }else{
-                            $this->bajarSaldo();
-                            $this->anteriorTiempo = $actual;
-                            $this->viajesDiarios++;
-                            return "normal";
-                        }
-                        break;
-                }
+            $resultado = parent::puedePagar();
+            if($resultado != "no"){
+                $this->anteriorTiempo = $actual;
+                $this->viajesDiarios++;
             }
-            else {
-                if($this->obtenerPlus() != 2){
-                    $this->aumentarPlus();
-                    $this->anteriorTiempo = $actual;
-                    $this->viajesDiarios++;
-                    return "usa plus";
-                }
-            }
-            return "no";
+            return $resultado;
         }
         return "no";
     }

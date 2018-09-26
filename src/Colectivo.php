@@ -45,7 +45,7 @@ class Colectivo implements ColectivoInterface{
             case "paga dos plus":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "dos plus");
                 break;
-            case "no":
+            default:
                 return false;
         }
     }

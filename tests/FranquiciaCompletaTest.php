@@ -11,7 +11,7 @@ class FranquiciaCompletaTest extends TestCase {
     public function testSiemprePagar(){
         $completitoDeJamonYQueso = new FranquiciaCompleta;
         $saldo = $completitoDeJamonYQueso->obtenerSaldo();
-        $completitoDeJamonYQueso->bajarSaldo();
+        $completitoDeJamonYQueso->bajarSaldo($completitoDeJamonYQueso->precio);
         $this->assertEquals($saldo,$completitoDeJamonYQueso->obtenerSaldo());
     }
 }

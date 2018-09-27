@@ -4,7 +4,7 @@ namespace TrabajoTarjeta;
 
 class MedioBoletoEstudiantil extends Tarjeta {
 
-    protected $anteriorTiempo = NULL;
+    public $anteriorTiempo = NULL;
 
     public function __construct($tiempo) {
         $this->precio = ( (new Tarjeta())->precio ) / 2;

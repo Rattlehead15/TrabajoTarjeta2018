@@ -12,6 +12,8 @@ class Tarjeta implements TarjetaInterface {
 
   public $tiempo;
 
+  public $anteriorTiempo = NULL;
+
   public function recargar($monto) {
     //Chequea si es alguno de los valores aceptados que no cargan dinero extra
     if($monto == 10 || $monto == 20 || $monto == 30 || $monto == 50 || $monto == 100){
@@ -57,8 +59,8 @@ class Tarjeta implements TarjetaInterface {
   }
 
 
-  public function bajarSaldo(){
-    $this->saldo -= $this->precio;
+  public function bajarSaldo($montito){
+    $this->saldo -= $montito;
   }
 
   /**
@@ -90,36 +92,70 @@ class Tarjeta implements TarjetaInterface {
     if($this->obtenerSaldo() >= $this->precio){
       switch($this->obtenerPlus()){
         case 0:
-          $this->bajarSaldo();
+          if($this->trasbordoPermitido()){
+            $this->bajarSaldo($this->precio / 3);
+          }
+          else{
+            $this->bajarSaldo($this->precio);
+          }
           return "normal";
           break;
         case 1:
+          if($this->trasbordoPermitido()){
+            if($this->obtenerSaldo() >= $this->precio * 4/3){
+              $this->bajarSaldo($this->precio / 3);
+              $this->bajarSaldo($this->precio);
+              $this->plus--;
+              return "paga un plus";
+            }else{
+              $this->bajarSaldo($this->precio / 3);
+              return "normal";
+            }
+          }
           if($this->obtenerSaldo() >= $this->precio * 2){
-            $this->bajarSaldo();
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
             $this->plus--;
             return "paga un plus";
           }else{
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
             return "normal";
           }
           break;
         case 2:
+          if($this->trasbordoPermitido()){
+            if($this->obtenerSaldo() >= $this->precio * 7/3){
+              $this->bajarSaldo($this->precio);
+              $this->bajarSaldo($this->precio);
+              $this->bajarSaldo($this->precio / 3);
+              $this->plus-=2;
+              return "paga dos plus";
+            }else if($this->obtenerSaldo() >= $this->precio * 4/3){
+              $this->bajarSaldo($this->precio);
+              $this->bajarSaldo($this->precio / 3);
+              $this->plus--;
+              return "paga un plus";
+            }else{
+              $this->bajarSaldo($this->precio / 3);
+              return "normal";
+            }
+          }
           if($this->obtenerSaldo() >= $this->precio * 3){
-            $this->bajarSaldo();
-            $this->bajarSaldo();
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
             $this->plus-=2;
             return "paga dos plus";
           }else if($this->obtenerSaldo() >= $this->precio * 2){
-            $this->bajarSaldo();
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
             $this->plus--;
             return "paga un plus";
           }else{
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
             return "normal";
           }
+          break;
       }
     }
     else{
@@ -130,4 +166,15 @@ class Tarjeta implements TarjetaInterface {
     }
     return "no";
   }
+
+  public function trasbordoPermitido(){
+    $actual = $this->tiempo->time();
+    $diferencia = (($actual) - ($this->anteriorTiempo));
+    if($diferencia < 60 || $this->anteriorTiempo == NULL){
+      $this->anteriorTiempo = $actual;
+      return true;
+    }
+    return false;
+  }
+
 }

@@ -85,8 +85,11 @@ class Tarjeta implements TarjetaInterface {
    * "plus" si paga con un viaje plus,
    * "paga un plus" si paga con saldo y ademas abona un plus,
    * "paga dos plus" si abona dos,
-   * o "no" en caso contrario,
-   * y si puede pagar baja el saldo o los viajes plus de la tarjeta.
+   * "transbordo normal" si usa transbordo,
+   * "transbordo y paga un plus" si usa transbordo y tambien paga un plus,
+   * "transbordo y paga dos plus" si paga dos,
+   * o "no" en caso contrario.
+   * Luego, si puede pagar, baja el saldo o los viajes plus de la tarjeta.
    */
   public function puedePagar(){
     if($this->obtenerSaldo() >= $this->precio){
@@ -94,11 +97,12 @@ class Tarjeta implements TarjetaInterface {
         case 0:
           if($this->trasbordoPermitido()){
             $this->bajarSaldo($this->precio / 3);
+            return "transbordo normal";
           }
           else{
             $this->bajarSaldo($this->precio);
+            return "normal";
           }
-          return "normal";
           break;
         case 1:
           if($this->trasbordoPermitido()){
@@ -106,10 +110,10 @@ class Tarjeta implements TarjetaInterface {
               $this->bajarSaldo($this->precio / 3);
               $this->bajarSaldo($this->precio);
               $this->plus--;
-              return "paga un plus";
+              return "transbordo y paga un plus";
             }else{
               $this->bajarSaldo($this->precio / 3);
-              return "normal";
+              return "transbordo normal";
             }
           }
           if($this->obtenerSaldo() >= $this->precio * 2){
@@ -129,15 +133,15 @@ class Tarjeta implements TarjetaInterface {
               $this->bajarSaldo($this->precio);
               $this->bajarSaldo($this->precio / 3);
               $this->plus-=2;
-              return "paga dos plus";
+              return "transbordo y paga dos plus";
             }else if($this->obtenerSaldo() >= $this->precio * 4/3){
               $this->bajarSaldo($this->precio);
               $this->bajarSaldo($this->precio / 3);
               $this->plus--;
-              return "paga un plus";
+              return "transbordo y paga un plus";
             }else{
               $this->bajarSaldo($this->precio / 3);
-              return "normal";
+              return "transbordo normal";
             }
           }
           if($this->obtenerSaldo() >= $this->precio * 3){
@@ -170,10 +174,44 @@ class Tarjeta implements TarjetaInterface {
   public function trasbordoPermitido(){
     $actual = $this->tiempo->time();
     $diferencia = (($actual) - ($this->anteriorTiempo));
-    if($diferencia < 60 || $this->anteriorTiempo == NULL){
+    if($diferencia < diferenciaNecesaria($actual) || $this->anteriorTiempo == NULL){
       $this->anteriorTiempo = $actual;
       return true;
     }
+    return false;
+  }
+
+  /**
+   * Acá se fija cuanto tiempo tiene para hacer el transbordo
+   * Lo podía meter en trasbordoPermitido pero quedaría re ilegible y choto
+   */
+  function diferenciaNecesaria($tiempo){
+    $dia = date("D",$tiempo);
+    $hora = date("H", $tiempo);
+    if($hora>=22 || $hora<=6){ // Si es de noche hay mas tiempo
+      return 90;
+    }else{
+      if($dia == "Sat"){ // Si es sabado depende si es de mañana o tarde
+        if($hora<14 && !esFeriado()) // Aunque tambien puede ser feriado un sabado y entonces hay mas tiempo a la mañana tambien
+          return 60;
+        else
+          return 90;
+      }
+      if($dia == "Sun"){ // Los domingos tambien hay mas tiempo
+        return 90;
+      }
+      if(esFeriado()) // Y los otros días depende si es feriado
+        return 90;
+      else
+        return 60;
+    }
+  }
+
+  /**
+   * Esto hay que hacerlo pero no sé bien cómo.
+   * Acá voy a poner alguna forma de ver si el día es feriado. Por ahora ningún día es feriado.
+   */
+  function esFeriado(){
     return false;
   }
 

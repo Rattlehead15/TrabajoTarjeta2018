@@ -45,6 +45,15 @@ class Colectivo implements ColectivoInterface{
             case "paga dos plus":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "dos plus");
                 break;
+            case "transbordo normal";
+                return new Boleto($tarjeta->precio/3, $this, $tarjeta, $this->tiempo->time(), "transbordo");
+                break;
+            case "transbordo y paga un plus";
+                return new Boleto($tarjeta->precio/3, $this, $tarjeta, $this->tiempo->time(), "transbordo y un plus");
+                break;
+            case "transbordo y paga dos plus";
+                return new Boleto($tarjeta->precio/3, $this, $tarjeta, $this->tiempo->time(), "transbordo y dos plus");
+                break;
             default:
                 return false;
         }

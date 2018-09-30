@@ -4,8 +4,6 @@ namespace TrabajoTarjeta;
 
 class MedioBoletoUniversitario extends Tarjeta {
 
-    public $anteriorTiempo = NULL;
-
     protected $viajesDiarios = 0;
 
     protected $diaAnterior = NULL;

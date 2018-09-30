@@ -14,8 +14,9 @@ class Tarjeta implements TarjetaInterface {
 
   public $anteriorTiempo = NULL;
 
-  public function __construct($tiempo){
+  public function __construct($tiempo, $saldo = 0){
     $this->tiempo = $tiempo;
+    $this->saldo = $saldo;
   }
 
   public function recargar($monto) {
@@ -163,10 +164,13 @@ class Tarjeta implements TarjetaInterface {
             $this->bajarSaldo($this->precio);
             return "normal";
           }
-          break;
       }
     }
     else{
+      if($this->trasbordoPermitido()){
+        if($this->obtenerSaldo()>=(($this->precio)/3))
+          return "transbordo normal";
+      }
       if($this->obtenerPlus() != 2){
         $this->aumentarPlus();
           return "usa plus";
@@ -178,7 +182,7 @@ class Tarjeta implements TarjetaInterface {
   public function trasbordoPermitido(){
     $actual = $this->tiempo->time();
     $diferencia = (($actual) - ($this->anteriorTiempo));
-    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) != NULL)){
+    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== NULL)){
       $this->anteriorTiempo = $actual;
       return true;
     }
@@ -198,7 +202,7 @@ class Tarjeta implements TarjetaInterface {
       return 90;
     }else{
       if($dia == "Sat"){ // Si es sabado depende si es de mañana o tarde
-        if($hora<14 && !esFeriado()) // Aunque tambien puede ser feriado un sabado y entonces hay mas tiempo a la mañana tambien
+        if($hora<14 && !($this->esFeriado())) // Aunque tambien puede ser feriado un sabado y entonces hay mas tiempo a la mañana tambien
           return 60;
         else
           return 90;
@@ -206,7 +210,7 @@ class Tarjeta implements TarjetaInterface {
       if($dia == "Sun"){ // Los domingos tambien hay mas tiempo
         return 90;
       }
-      if(esFeriado()) // Y los otros días depende si es feriado
+      if($this->esFeriado()) // Y los otros días depende si es feriado
         return 90;
       else
         return 60;

@@ -18,9 +18,9 @@ class MedioBoletoEstudiantilTest extends TestCase {
         $this->assertEquals($boleto,new Boleto($estudiantil->precio,$colectivo,$estudiantil,$tiempo->time(),"normal"));
         $tiempo->avanzar(10);
         $this->assertFalse($colectivo->pagarCon($estudiantil));
-        $tiempo->avanzar(300);
+        $tiempo->avanzar(6000);
         $boleto = $colectivo->pagarCon($estudiantil);
-        $this->assertEquals($estudiantil->obtenerAntTiempo(), 310);
+        $this->assertEquals($estudiantil->obtenerAntTiempo(), 6010);
         $this->assertEquals($boleto,new Boleto($estudiantil->precio,$colectivo,$estudiantil,$tiempo->time(),"normal"));
     }
 

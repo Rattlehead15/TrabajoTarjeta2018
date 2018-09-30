@@ -150,6 +150,11 @@ class TarjetaTest extends TestCase {
         $colectivo = new Colectivo("106","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3,$boleto->obtenerValor());
+        $tarjeta = new Tarjeta($tiempo,14.8);
+        $tarjeta->aumentarPlus();
+        $tarjeta->aumentarPlus();
+        $colectivo = new Colectivo("K","Empresa Genérica",3,$tiempo);
+        $this->assertEquals($tarjeta->precio /3, $boleto->obtenerValor());
     }
 
     public function testDiasTransbordo(){

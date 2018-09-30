@@ -32,7 +32,7 @@ class Colectivo implements ColectivoInterface{
     }
 
     public function pagarCon(TarjetaInterface $tarjeta){
-        switch($tarjeta->puedePagar()){
+        switch($tarjeta->puedePagar($this->linea, $this->empresa, $this->numero)){
             case "normal":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "normal");
                 break;
@@ -44,6 +44,15 @@ class Colectivo implements ColectivoInterface{
                 break;
             case "paga dos plus":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "dos plus");
+                break;
+            case "transbordo normal";
+                return new Boleto(($tarjeta->precio)/3, $this, $tarjeta, $this->tiempo->time(), "transbordo");
+                break;
+            case "transbordo y paga un plus";
+                return new Boleto(($tarjeta->precio)/3, $this, $tarjeta, $this->tiempo->time(), "transbordo y un plus");
+                break;
+            case "transbordo y paga dos plus";
+                return new Boleto(($tarjeta->precio)/3, $this, $tarjeta, $this->tiempo->time(), "transbordo y dos plus");
                 break;
             default:
                 return false;

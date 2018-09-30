@@ -12,6 +12,17 @@ class Tarjeta implements TarjetaInterface {
 
   public $tiempo;
 
+  public $anteriorTiempo = NULL;
+
+  public $anteriorColectivo = NULL;
+
+  public $actualColectivo;
+
+  public function __construct($tiempo, $saldo = 0){
+    $this->tiempo = $tiempo;
+    $this->saldo = $saldo;
+  }
+
   public function recargar($monto) {
     //Chequea si es alguno de los valores aceptados que no cargan dinero extra
     if($monto == 10 || $monto == 20 || $monto == 30 || $monto == 50 || $monto == 100){
@@ -57,8 +68,8 @@ class Tarjeta implements TarjetaInterface {
   }
 
 
-  public function bajarSaldo(){
-    $this->saldo -= $this->precio;
+  public function bajarSaldo($montito){
+    $this->saldo -= $montito;
   }
 
   /**
@@ -83,46 +94,88 @@ class Tarjeta implements TarjetaInterface {
    * "plus" si paga con un viaje plus,
    * "paga un plus" si paga con saldo y ademas abona un plus,
    * "paga dos plus" si abona dos,
-   * o "no" en caso contrario,
-   * y si puede pagar baja el saldo o los viajes plus de la tarjeta.
+   * "transbordo normal" si usa transbordo,
+   * "transbordo y paga un plus" si usa transbordo y tambien paga un plus,
+   * "transbordo y paga dos plus" si paga dos,
+   * o "no" en caso contrario.
+   * Luego, si puede pagar, baja el saldo o los viajes plus de la tarjeta.
    */
-  public function puedePagar(){
+  public function puedePagar($linea, $empresa, $numero){
+    $this->actualColectivo = array($linea, $empresa, $numero);
     if($this->obtenerSaldo() >= $this->precio){
       switch($this->obtenerPlus()){
         case 0:
-          $this->bajarSaldo();
-          return "normal";
+          if($this->trasbordoPermitido($this->actualColectivo)){
+            $this->bajarSaldo($this->precio / 3);
+            return "transbordo normal";
+          }
+          else{
+            $this->bajarSaldo($this->precio);
+            return "normal";
+          }
           break;
         case 1:
+          if($this->trasbordoPermitido($this->actualColectivo)){
+            if($this->obtenerSaldo() >= $this->precio * 4/3){
+              $this->bajarSaldo($this->precio / 3);
+              $this->bajarSaldo($this->precio);
+              $this->plus--;
+              return "transbordo y paga un plus";
+            }else{
+              $this->bajarSaldo($this->precio / 3);
+              return "transbordo normal";
+            }
+          }
           if($this->obtenerSaldo() >= $this->precio * 2){
-            $this->bajarSaldo();
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
             $this->plus--;
             return "paga un plus";
           }else{
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
             return "normal";
           }
           break;
         case 2:
+          if($this->trasbordoPermitido($this->actualColectivo)){
+            if($this->obtenerSaldo() >= $this->precio * 7/3){
+              $this->bajarSaldo($this->precio);
+              $this->bajarSaldo($this->precio);
+              $this->bajarSaldo($this->precio / 3);
+              $this->plus-=2;
+              return "transbordo y paga dos plus";
+            }else if($this->obtenerSaldo() >= $this->precio * 4/3){
+              $this->bajarSaldo($this->precio);
+              $this->bajarSaldo($this->precio / 3);
+              $this->plus--;
+              return "transbordo y paga un plus";
+            }else{
+              $this->bajarSaldo($this->precio / 3);
+              return "transbordo normal";
+            }
+          }
           if($this->obtenerSaldo() >= $this->precio * 3){
-            $this->bajarSaldo();
-            $this->bajarSaldo();
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
             $this->plus-=2;
             return "paga dos plus";
           }else if($this->obtenerSaldo() >= $this->precio * 2){
-            $this->bajarSaldo();
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
+            $this->bajarSaldo($this->precio);
             $this->plus--;
             return "paga un plus";
           }else{
-            $this->bajarSaldo();
+            $this->bajarSaldo($this->precio);
             return "normal";
           }
       }
     }
     else{
+      if($this->trasbordoPermitido($this->actualColectivo)){
+        if($this->obtenerSaldo()>=(($this->precio)/3))
+          return "transbordo normal";
+      }
       if($this->obtenerPlus() != 2){
         $this->aumentarPlus();
           return "usa plus";
@@ -130,4 +183,53 @@ class Tarjeta implements TarjetaInterface {
     }
     return "no";
   }
+
+  public function trasbordoPermitido($colectivo){
+    $actual = $this->tiempo->time();
+    $diferencia = (($actual) - ($this->anteriorTiempo));
+    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== NULL) && $colectivo !== $this->anteriorColectivo && $this->anteriorColectivo !== NULL){
+      $this->anteriorTiempo = $actual;
+      $this->anteriorColectivo = $colectivo;
+      return true;
+    }
+    $this->anteriorTiempo = $actual;
+    $this->anteriorColectivo = $colectivo;
+    return false;
+  }
+
+  /**
+   * Acá se fija cuanto tiempo tiene para hacer el transbordo
+   * Lo podía meter en trasbordoPermitido pero quedaría re ilegible y choto
+   * (La diferencia que devuelve está en minutos, por eso multiplico por 60 en trasbordoPermitido)
+   */
+  function diferenciaNecesaria($tiempo){
+    $dia = date("D",$tiempo);
+    $hora = date("H", $tiempo);
+    if($hora>=22 || $hora<=6){ // Si es de noche hay mas tiempo
+      return 90;
+    }else{
+      if($dia == "Sat"){ // Si es sabado depende si es de mañana o tarde
+        if($hora<14 && !($this->esFeriado())) // Aunque tambien puede ser feriado un sabado y entonces hay mas tiempo a la mañana tambien
+          return 60;
+        else
+          return 90;
+      }
+      if($dia == "Sun"){ // Los domingos tambien hay mas tiempo
+        return 90;
+      }
+      if($this->esFeriado()) // Y los otros días depende si es feriado
+        return 90;
+      else
+        return 60;
+    }
+  }
+
+  /**
+   * Esto hay que hacerlo pero no sé bien cómo.
+   * Acá voy a poner alguna forma de ver si el día es feriado. Por ahora ningún día es feriado.
+   */
+  function esFeriado(){
+    return false;
+  }
+
 }

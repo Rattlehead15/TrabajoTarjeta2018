@@ -26,6 +26,12 @@ class Boleto implements BoletoInterface {
             case "dos plus":
                 $this->descripcion = "Abona viajes plus ".($valor*2)." y";
                 break;
+            case "transbordo y un plus":
+                $this->descripcion = "Abona viaje plus ".($valor*3)." y";
+                break;
+            case "transbordo y dos plus":
+                $this->descripcion = "Abona viajes plus ".($valor*6)." y";
+                break;
         }
 
     }

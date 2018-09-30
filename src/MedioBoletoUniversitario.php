@@ -13,7 +13,7 @@ class MedioBoletoUniversitario extends Tarjeta {
         $this->tiempo = $tiempo;
     }
 
-    public function puedePagar(){
+    public function puedePagar($linea, $empresa, $numero){
         $this->cambioDeDia();
         $actual = $this->tiempo->time();
         $diferencia = $actual - ($this->anteriorTiempo);
@@ -23,7 +23,7 @@ class MedioBoletoUniversitario extends Tarjeta {
             $this->precio = ((new Tarjeta(new TiempoFalso(0)))->precio) / 2;
         }
         if( ($diferencia>=300) || $this->anteriorTiempo === NULL) {
-            $resultado = parent::puedePagar();
+            $resultado = parent::puedePagar($linea, $empresa, $numero);
             if($resultado != "no"){
                 $this->anteriorTiempo = $actual;
                 $this->viajesDiarios++;

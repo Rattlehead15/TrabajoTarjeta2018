@@ -13,11 +13,11 @@ class MedioBoletoEstudiantil extends Tarjeta {
         return $this->anteriorTiempo;
     }
 
-    public function puedePagar(){
+    public function puedePagar($linea, $empresa, $numero){
         $actual = $this->tiempo->time();
         $diferencia = (($actual) - ($this->anteriorTiempo));
         if( $diferencia >= 300 || $this->anteriorTiempo === NULL ) {
-            $resultado = parent::puedePagar();
+            $resultado = parent::puedePagar($linea, $empresa, $numero);
             if($resultado != "no"){
                 $this->anteriorTiempo = $actual;
             }

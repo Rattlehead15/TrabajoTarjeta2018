@@ -14,6 +14,10 @@ class Tarjeta implements TarjetaInterface {
 
   public $anteriorTiempo = NULL;
 
+  public $anteriorColectivo = NULL;
+
+  public $actualColectivo;
+
   public function __construct($tiempo, $saldo = 0){
     $this->tiempo = $tiempo;
     $this->saldo = $saldo;
@@ -96,11 +100,12 @@ class Tarjeta implements TarjetaInterface {
    * o "no" en caso contrario.
    * Luego, si puede pagar, baja el saldo o los viajes plus de la tarjeta.
    */
-  public function puedePagar(){
+  public function puedePagar($linea, $empresa, $numero){
+    $this->actualColectivo = array($linea, $empresa, $numero);
     if($this->obtenerSaldo() >= $this->precio){
       switch($this->obtenerPlus()){
         case 0:
-          if($this->trasbordoPermitido()){
+          if($this->trasbordoPermitido($this->actualColectivo)){
             $this->bajarSaldo($this->precio / 3);
             return "transbordo normal";
           }
@@ -110,7 +115,7 @@ class Tarjeta implements TarjetaInterface {
           }
           break;
         case 1:
-          if($this->trasbordoPermitido()){
+          if($this->trasbordoPermitido($this->actualColectivo)){
             if($this->obtenerSaldo() >= $this->precio * 4/3){
               $this->bajarSaldo($this->precio / 3);
               $this->bajarSaldo($this->precio);
@@ -132,7 +137,7 @@ class Tarjeta implements TarjetaInterface {
           }
           break;
         case 2:
-          if($this->trasbordoPermitido()){
+          if($this->trasbordoPermitido($this->actualColectivo)){
             if($this->obtenerSaldo() >= $this->precio * 7/3){
               $this->bajarSaldo($this->precio);
               $this->bajarSaldo($this->precio);
@@ -167,7 +172,7 @@ class Tarjeta implements TarjetaInterface {
       }
     }
     else{
-      if($this->trasbordoPermitido()){
+      if($this->trasbordoPermitido($this->actualColectivo)){
         if($this->obtenerSaldo()>=(($this->precio)/3))
           return "transbordo normal";
       }
@@ -179,14 +184,16 @@ class Tarjeta implements TarjetaInterface {
     return "no";
   }
 
-  public function trasbordoPermitido(){
+  public function trasbordoPermitido($colectivo){
     $actual = $this->tiempo->time();
     $diferencia = (($actual) - ($this->anteriorTiempo));
-    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== NULL)){
+    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== NULL) && $colectivo !== $this->anteriorColectivo && $this->anteriorColectivo !== NULL){
       $this->anteriorTiempo = $actual;
+      $this->anteriorColectivo = $colectivo;
       return true;
     }
     $this->anteriorTiempo = $actual;
+    $this->anteriorColectivo = $colectivo;
     return false;
   }
 

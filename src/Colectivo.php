@@ -32,7 +32,7 @@ class Colectivo implements ColectivoInterface{
     }
 
     public function pagarCon(TarjetaInterface $tarjeta){
-        switch($tarjeta->puedePagar()){
+        switch($tarjeta->puedePagar($this->linea, $this->empresa, $this->numero)){
             case "normal":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "normal");
                 break;

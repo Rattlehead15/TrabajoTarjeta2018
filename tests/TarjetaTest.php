@@ -114,24 +114,29 @@ class TarjetaTest extends TestCase {
         $tarjeta->recargar(962.59);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals($tarjeta->precio, $boleto->obtenerValor());
+        $colectivo = new Colectivo("106","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3, $boleto->obtenerValor());
         $tarjeta->aumentarPlus();
+        $colectivo = new Colectivo("112","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3, $boleto->obtenerValor());
         $tarjeta->aumentarPlus();
         $tarjeta->aumentarPlus();
+        $colectivo = new Colectivo("K","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3, $boleto->obtenerValor());
         $tarjeta = new Tarjeta($tiempo,14.8*2+3);
         $boleto = $colectivo->pagarCon($tarjeta);
         $tarjeta->aumentarPlus();
+        $colectivo = new Colectivo("106","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3, $boleto->obtenerValor());
         $tarjeta = new Tarjeta($tiempo,14.8+19.8);
         $boleto = $colectivo->pagarCon($tarjeta);
         $tarjeta->aumentarPlus();
         $tarjeta->aumentarPlus();
+        $colectivo = new Colectivo("K","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3, $boleto->obtenerValor());
         $tarjeta = new Tarjeta($tiempo,14.8+14.8);
@@ -139,9 +144,10 @@ class TarjetaTest extends TestCase {
         $tarjeta->aumentarPlus();
         $tarjeta->aumentarPlus();
         $boleto = $colectivo->pagarCon($tarjeta);
-        $this->assertEquals(($tarjeta->precio)/3, $boleto->obtenerValor());
+        $this->assertEquals($tarjeta->precio, $boleto->obtenerValor());// En este test el colectivo sigue siendo el mismo asi que el precio no cambia
         $tarjeta = new Tarjeta($tiempo,14.8+5);
         $colectivo->pagarCon($tarjeta);
+        $colectivo = new Colectivo("106","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(($tarjeta->precio)/3,$boleto->obtenerValor());
     }
@@ -152,6 +158,7 @@ class TarjetaTest extends TestCase {
         $colectivo = new Colectivo("K","Empresa Genérica",3,$tiempo);
         $colectivo->pagarCon($tarjeta); // Ahora tenemos 90 minutos para hacer transbordo ya que son las 00:00hs
         $tiempo->avanzar(3600);
+        $colectivo = new Colectivo("106","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(new Boleto($tarjeta->precio / 3,$colectivo,$tarjeta,$tiempo->time(),"transbordo"), $boleto); // Comprobamos que sea un boleto de transbordo
         $tiempo->avanzar(3600*30); // Ahora es viernes a las 7 de la mañana
@@ -169,10 +176,11 @@ class TarjetaTest extends TestCase {
         $colectivo->pagarCon($tarjeta); // Pagamos una vez. Ahora tenemos 90 minutos
         $tiempo->avanzar(60*80); // Esperamos lo mismo que antes, pero ahora es de tarde así que deberíamos poder transbordar
         $boleto = $colectivo->pagarCon($tarjeta);
-        $this->assertEquals(new Boleto($tarjeta->precio/3,$colectivo,$tarjeta,$tiempo->time(),"transbordo"), $boleto); // Nos deja
+        $this->assertEquals(new Boleto($tarjeta->precio,$colectivo,$tarjeta,$tiempo->time(),"transbordo"), $boleto); // No nos deja ya que el colectivo es el mismo
         $tiempo->avanzar(86400); // Avanzamos hasta el domingo
         $colectivo->pagarCon($tarjeta); // Pagamos una vez. Ahora tenemos 90 minutos
         $tiempo->avanzar(60*80); // Esperamos lo mismo que antes, como es domingo nos va a dejar
+        $colectivo = new Colectivo("K","Empresa Genérica",3,$tiempo);
         $boleto = $colectivo->pagarCon($tarjeta);
         $this->assertEquals(new Boleto($tarjeta->precio/3,$colectivo,$tarjeta,$tiempo->time(),"transbordo"), $boleto); // Nos deja
     }

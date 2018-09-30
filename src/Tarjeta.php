@@ -14,6 +14,10 @@ class Tarjeta implements TarjetaInterface {
 
   public $anteriorTiempo = NULL;
 
+  public function __construct($tiempo){
+    $this->tiempo = $tiempo;
+  }
+
   public function recargar($monto) {
     //Chequea si es alguno de los valores aceptados que no cargan dinero extra
     if($monto == 10 || $monto == 20 || $monto == 30 || $monto == 50 || $monto == 100){
@@ -174,16 +178,18 @@ class Tarjeta implements TarjetaInterface {
   public function trasbordoPermitido(){
     $actual = $this->tiempo->time();
     $diferencia = (($actual) - ($this->anteriorTiempo));
-    if($diferencia < diferenciaNecesaria($actual) || $this->anteriorTiempo == NULL){
+    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) != NULL)){
       $this->anteriorTiempo = $actual;
       return true;
     }
+    $this->anteriorTiempo = $actual;
     return false;
   }
 
   /**
    * Acá se fija cuanto tiempo tiene para hacer el transbordo
    * Lo podía meter en trasbordoPermitido pero quedaría re ilegible y choto
+   * (La diferencia que devuelve está en minutos, por eso multiplico por 60 en trasbordoPermitido)
    */
   function diferenciaNecesaria($tiempo){
     $dia = date("D",$tiempo);

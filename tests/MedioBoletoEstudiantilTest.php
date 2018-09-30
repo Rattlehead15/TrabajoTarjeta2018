@@ -30,7 +30,7 @@ class MedioBoletoEstudiantilTest extends TestCase {
     public function testSaleLaMitad(){
         $tiempo = new TiempoFalso(0);
         $colectivo = new Colectivo("K","Empresa genérica",3,$tiempo);
-        $normal = new Tarjeta();
+        $normal = new Tarjeta($tiempo);
         $estudiantil = new MedioBoletoEstudiantil($tiempo);
         $normal->recargar(100);
         $estudiantil->recargar(100);

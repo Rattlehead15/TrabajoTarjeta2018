@@ -9,7 +9,7 @@ class MedioBoletoUniversitario extends Tarjeta {
     protected $diaAnterior = NULL;
 
     public function __construct($tiempo) {
-        $this->precio = ( (new Tarjeta())->precio ) / 2;
+        $this->precio = ( (new Tarjeta(new TiempoFalso(0)))->precio ) / 2;
         $this->tiempo = $tiempo;
     }
 
@@ -18,9 +18,9 @@ class MedioBoletoUniversitario extends Tarjeta {
         $actual = $this->tiempo->time();
         $diferencia = $actual - ($this->anteriorTiempo);
         if($this->viajesDiarios>=2){
-            $this->precio = (new Tarjeta())->precio;
+            $this->precio = (new Tarjeta(new TiempoFalso(0)))->precio;
         }else{
-            $this->precio = ((new Tarjeta())->precio) / 2;
+            $this->precio = ((new Tarjeta(new TiempoFalso(0)))->precio) / 2;
         }
         if( ($diferencia>=300) || $this->anteriorTiempo === NULL) {
             $resultado = parent::puedePagar();

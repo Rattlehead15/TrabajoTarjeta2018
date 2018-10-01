@@ -217,10 +217,11 @@ class Tarjeta implements TarjetaInterface {
       if($dia == "Sun"){ // Los domingos tambien hay mas tiempo
         return 90;
       }
-      if($this->esFeriado()) // Y los otros días depende si es feriado
-        return 90;
-      else
-        return 60;
+      //if($this->esFeriado()) // Y los otros días depende si es feriado
+      //  return 90;
+      //else
+      //  return 60;
+      return 60; // Por ahora no manejamos los feriados
     }
   }
 

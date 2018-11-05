@@ -37,11 +37,8 @@ class MedioBoletoUniversitario extends Tarjeta {
         if($this->diaAnterior!=NULL) {
             if( (($this->tiempo->time()) - ($this->diaAnterior)) >= (3600*24) ){
                 $this->viajesDiarios = 0;
-                $this->diaAnterior = $this->tiempo->time();
             }
         }
-        else{
-            $this->diaAnterior=$this->tiempo->time();
-        }
+        $this->diaAnterior = $this->tiempo->time();
     }
 }

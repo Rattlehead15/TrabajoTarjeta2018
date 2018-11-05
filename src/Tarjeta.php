@@ -58,11 +58,6 @@ class Tarjeta implements TarjetaInterface {
     return false;
   }
 
-  /**
-   * Devuelve el saldo que le queda a la tarjeta.
-   *
-   * @return float
-   */
   public function obtenerSaldo() {
     return $this->saldo;
   }
@@ -72,34 +67,14 @@ class Tarjeta implements TarjetaInterface {
     $this->saldo -= $montito;
   }
 
-  /**
-   * Devuelve la cantidad de viajes plus que uso la tarjeta.
-   *
-   * @return int
-   */
   public function obtenerPlus() {
     return $this->plus;
   }
 
-  /**
-   * Aumenta la cantidad de viajes plus usados.
-   * 
-   */
   public function aumentarPlus(){
     $this->plus ++;
   }
 
-  /**
-   * Retorna "normal" si puede pagar normalmente,
-   * "plus" si paga con un viaje plus,
-   * "paga un plus" si paga con saldo y ademas abona un plus,
-   * "paga dos plus" si abona dos,
-   * "transbordo normal" si usa transbordo,
-   * "transbordo y paga un plus" si usa transbordo y tambien paga un plus,
-   * "transbordo y paga dos plus" si paga dos,
-   * o "no" en caso contrario.
-   * Luego, si puede pagar, baja el saldo o los viajes plus de la tarjeta.
-   */
   public function puedePagar($linea, $empresa, $numero){
     $this->actualColectivo = array($linea, $empresa, $numero);
     if($this->obtenerSaldo() >= $this->precio){
@@ -187,6 +162,7 @@ class Tarjeta implements TarjetaInterface {
   public function trasbordoPermitido($colectivo){
     $actual = $this->tiempo->time();
     $diferencia = (($actual) - ($this->anteriorTiempo));
+    // La diferencia que devuelve está en minutos, por eso multiplico por 60
     if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== NULL) && $colectivo !== $this->anteriorColectivo && $this->anteriorColectivo !== NULL){
       $this->anteriorTiempo = $actual;
       $this->anteriorColectivo = $colectivo;
@@ -197,11 +173,6 @@ class Tarjeta implements TarjetaInterface {
     return false;
   }
 
-  /**
-   * Acá se fija cuanto tiempo tiene para hacer el transbordo
-   * Lo podía meter en trasbordoPermitido pero quedaría re ilegible y choto
-   * (La diferencia que devuelve está en minutos, por eso multiplico por 60 en trasbordoPermitido)
-   */
   function diferenciaNecesaria($tiempo){
     $dia = date("D",$tiempo);
     $hora = date("H", $tiempo);
@@ -225,10 +196,6 @@ class Tarjeta implements TarjetaInterface {
     }
   }
 
-  /**
-   * Esto hay que hacerlo pero no sé bien cómo.
-   * Acá voy a poner alguna forma de ver si el día es feriado. Por ahora ningún día es feriado.
-   */
   function esFeriado(){
     return false;
   }

@@ -4,6 +4,8 @@ namespace TrabajoTarjeta;
 
 interface BoletoInterface {
 
+    public function obtenerDescripcion();
+
     /**
      * Devuelve el valor del boleto.
      *
@@ -18,4 +20,5 @@ interface BoletoInterface {
      */
     public function obtenerColectivo();
 
+    
 }

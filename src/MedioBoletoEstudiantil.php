@@ -11,6 +11,11 @@ class MedioBoletoEstudiantil extends Tarjeta {
         $this->tiempo = $tiempo;
     }
 
+    /**
+     * Devuelve el tiempo del anterior viaje hecho.
+     *
+     * @return TiempoInterface
+     */
     public function obtenerAntTiempo() {
         return $this->anteriorTiempo;
     }

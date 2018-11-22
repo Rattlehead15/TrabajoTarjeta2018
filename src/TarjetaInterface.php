@@ -87,17 +87,4 @@ interface TarjetaInterface {
      * @return bool
      */
     function esFeriado();
-
-    /**
-     * Devuelve el tiempo del anterior viaje hecho.
-     *
-     * @return TiempoInterface
-     */
-    public function obtenerAntTiempo();
-
-    /**
-     * Cambia "diaAnterior" al tiempo actual.
-     * Cambia "viejesDiarios" a 0 si nunca se viajo o si ya paso un dia entero desde el ultimo viaje.
-     */
-    public function cambioDeDia();
 }

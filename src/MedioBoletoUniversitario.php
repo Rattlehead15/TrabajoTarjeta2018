@@ -33,6 +33,10 @@ class MedioBoletoUniversitario extends Tarjeta {
         return "no";
     }
 
+    /**
+     * Cambia "diaAnterior" al tiempo actual.
+     * Cambia "viejesDiarios" a 0 si nunca se viajo o si ya paso un dia entero desde el ultimo viaje.
+     */
     public function cambioDeDia() {
         if($this->diaAnterior!=NULL) {
             if( (($this->tiempo->time()) - ($this->diaAnterior)) >= (3600*24) ){

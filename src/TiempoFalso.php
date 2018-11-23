@@ -1,8 +1,8 @@
 <?php
 namespace TrabajoTarjeta;
-class TiempoFalso implements TiempoInterface{
+class TiempoFalso implements TiempoInterface {
     protected $time;
-    public function __construct($iniciar){
+    public function __construct($iniciar) {
         $this->time = $iniciar;
     }
 
@@ -13,11 +13,11 @@ class TiempoFalso implements TiempoInterface{
      * 
      * @return int
      */
-    public function avanzar($segundos){
+    public function avanzar($segundos) {
         $this->time += $segundos;
     }
     
-    public function time(){
+    public function time() {
         return $this->time;
     }
 }

@@ -2,37 +2,37 @@
 
 namespace TrabajoTarjeta;
 
-class Colectivo implements ColectivoInterface{
+class Colectivo implements ColectivoInterface {
     protected $linea;
     protected $empresa;
     protected $numero;
     protected $tiempo;
 
-    public function __construct($linea, $empresa, $numero, $tiempo){
+    public function __construct($linea, $empresa, $numero, $tiempo) {
         $this->linea = $linea;
         $this->empresa = $empresa;
         $this->numero = $numero;
         $this->tiempo = $tiempo;
     }
 
-    public function linea(){
+    public function linea() {
         return $this->linea;
     }
 
-    public function empresa(){
+    public function empresa() {
         return $this->empresa;
     }
 
-    public function numero(){
+    public function numero() {
         return $this->numero;
     }
 
-    public function tiempo(){
+    public function tiempo() {
         return $this->tiempo->time();
     }
 
-    public function pagarCon(TarjetaInterface $tarjeta){
-        switch($tarjeta->puedePagar($this->linea, $this->empresa, $this->numero)){
+    public function pagarCon(TarjetaInterface $tarjeta) {
+        switch ($tarjeta->puedePagar($this->linea, $this->empresa, $this->numero)) {
             case "normal":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "normal");
                 break;
@@ -45,13 +45,13 @@ class Colectivo implements ColectivoInterface{
             case "paga dos plus":
                 return new Boleto($tarjeta->precio, $this, $tarjeta, $this->tiempo->time(), "dos plus");
                 break;
-            case "transbordo normal";
+            case "transbordo normal":
                 return new Boleto(($tarjeta->precio)/3, $this, $tarjeta, $this->tiempo->time(), "transbordo");
                 break;
-            case "transbordo y paga un plus";
+            case "transbordo y paga un plus":
                 return new Boleto(($tarjeta->precio)/3, $this, $tarjeta, $this->tiempo->time(), "transbordo y un plus");
                 break;
-            case "transbordo y paga dos plus";
+            case "transbordo y paga dos plus":
                 return new Boleto(($tarjeta->precio)/3, $this, $tarjeta, $this->tiempo->time(), "transbordo y dos plus");
                 break;
             default:

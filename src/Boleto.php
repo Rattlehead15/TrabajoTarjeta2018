@@ -19,7 +19,7 @@ class Boleto implements BoletoInterface {
         $this->colectivo = $colectivo;
         $this->tarjeta = $tarjeta;
         $this->fecha = $fecha;
-        switch($tipoPago){
+        switch($tipoPago) {
             case "un plus":
                 $this->descripcion = "Abona viaje plus ".$valor." y";
                 break;
@@ -36,7 +36,7 @@ class Boleto implements BoletoInterface {
 
     }
 
-    public function obtenerDescripcion(){
+    public function obtenerDescripcion() {
         return $this->descripcion;
     }
 

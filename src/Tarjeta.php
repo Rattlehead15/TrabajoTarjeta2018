@@ -25,18 +25,18 @@ class Tarjeta implements TarjetaInterface {
 
   public function recargar($monto) {
     //Chequea si es alguno de los valores aceptados que no cargan dinero extra
-    if($monto == 10 || $monto == 20 || $monto == 30 || $monto == 50 || $monto == 100) {
+    if ($monto == 10 || $monto == 20 || $monto == 30 || $monto == 50 || $monto == 100) {
       $this->saldo += $monto;
-      if($this->plus == 1 && $this->saldo >= $this->precio) {
+      if ($this->plus == 1 && $this->saldo >= $this->precio) {
         $this->saldo -= $this->precio;
         $this->plus = 0;
       }
-      if($this->plus == 2) {
-        if($this->saldo >= $this->precio && $this->saldo < $this->precio * 2) {
+      if ($this->plus == 2) {
+        if ($this->saldo >= $this->precio && $this->saldo < $this->precio * 2) {
           $this->saldo -= $this->precio;
           $this->plus = 1;
         }
-        if($this->saldo >= $this->precio * 2) {
+        if ($this->saldo >= $this->precio * 2) {
           $this->saldo -= $this->precio;
           $this->plus = 0;
         }
@@ -44,12 +44,12 @@ class Tarjeta implements TarjetaInterface {
       return true;
     }
     //Chequea si es alguno de los que sí cargan extra
-    if($monto == 510.15) {
+    if ($monto == 510.15) {
       $this->saldo += $monto + 81.93 - ($this->plus * $this->precio);
       $this->plus = 0;
       return true;
     }
-    if($monto == 962.59) {
+    if ($monto == 962.59) {
       $this->saldo += $monto + 221.58 - ($this->plus * $this->precio);
       $this->plus = 0;
       return true;
@@ -77,10 +77,10 @@ class Tarjeta implements TarjetaInterface {
 
   public function puedePagar($linea, $empresa, $numero) {
     $this->actualColectivo = array($linea, $empresa, $numero);
-    if($this->obtenerSaldo() >= $this->precio) {
-      switch($this->obtenerPlus()) {
+    if ($this->obtenerSaldo() >= $this->precio) {
+      switch ($this->obtenerPlus()) {
         case 0:
-          if($this->trasbordoPermitido($this->actualColectivo)) {
+          if ($this->trasbordoPermitido($this->actualColectivo)) {
             $this->bajarSaldo($this->precio / 3);
             return "transbordo normal";
           }
@@ -90,69 +90,69 @@ class Tarjeta implements TarjetaInterface {
           }
           break;
         case 1:
-          if($this->trasbordoPermitido($this->actualColectivo)) {
-            if($this->obtenerSaldo() >= $this->precio * 4/3) {
+          if ($this->trasbordoPermitido($this->actualColectivo)) {
+            if ($this->obtenerSaldo() >= $this->precio * 4/3) {
               $this->bajarSaldo($this->precio / 3);
               $this->bajarSaldo($this->precio);
               $this->plus--;
               return "transbordo y paga un plus";
-            }else {
+            } else {
               $this->bajarSaldo($this->precio / 3);
               return "transbordo normal";
             }
           }
-          if($this->obtenerSaldo() >= $this->precio * 2) {
+          if ($this->obtenerSaldo() >= $this->precio * 2) {
             $this->bajarSaldo($this->precio);
             $this->bajarSaldo($this->precio);
             $this->plus--;
             return "paga un plus";
-          }else {
+          } else {
             $this->bajarSaldo($this->precio);
             return "normal";
           }
           break;
         case 2:
-          if($this->trasbordoPermitido($this->actualColectivo)) {
-            if($this->obtenerSaldo() >= $this->precio * 7/3) {
+          if ($this->trasbordoPermitido($this->actualColectivo)) {
+            if ($this->obtenerSaldo() >= $this->precio * 7/3) {
               $this->bajarSaldo($this->precio);
               $this->bajarSaldo($this->precio);
               $this->bajarSaldo($this->precio / 3);
               $this->plus-=2;
               return "transbordo y paga dos plus";
-            }else if($this->obtenerSaldo() >= $this->precio * 4/3) {
+            } else if ($this->obtenerSaldo() >= $this->precio * 4/3) {
               $this->bajarSaldo($this->precio);
               $this->bajarSaldo($this->precio / 3);
               $this->plus--;
               return "transbordo y paga un plus";
-            }else {
+            } else {
               $this->bajarSaldo($this->precio / 3);
               return "transbordo normal";
             }
           }
-          if($this->obtenerSaldo() >= $this->precio * 3) {
+          if ($this->obtenerSaldo() >= $this->precio * 3) {
             $this->bajarSaldo($this->precio);
             $this->bajarSaldo($this->precio);
             $this->bajarSaldo($this->precio);
             $this->plus-=2;
             return "paga dos plus";
-          }else if($this->obtenerSaldo() >= $this->precio * 2) {
+          } else if ($this->obtenerSaldo() >= $this->precio * 2) {
             $this->bajarSaldo($this->precio);
             $this->bajarSaldo($this->precio);
             $this->plus--;
             return "paga un plus";
-          }else {
+          } else {
             $this->bajarSaldo($this->precio);
             return "normal";
           }
       }
     }
     else {
-      if($this->trasbordoPermitido($this->actualColectivo)) {
-        if($this->obtenerSaldo()>=(($this->precio)/3)) {
+      if ($this->trasbordoPermitido($this->actualColectivo)) {
+        if ($this->obtenerSaldo()>=(($this->precio)/3)) {
           return "transbordo normal";
         }
       }
-      if($this->obtenerPlus() != 2) {
+      if ($this->obtenerPlus() != 2) {
         $this->aumentarPlus();
           return "usa plus";
       }
@@ -164,7 +164,7 @@ class Tarjeta implements TarjetaInterface {
     $actual = $this->tiempo->time();
     $diferencia = (($actual) - ($this->anteriorTiempo));
     // La diferencia que devuelve está en minutos, por eso multiplico por 60
-    if($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== null) && $colectivo !== $this->anteriorColectivo && $this->anteriorColectivo !== null) {
+    if ($diferencia < ($this->diferenciaNecesaria($actual) * 60) && (($this->anteriorTiempo) !== null) && $colectivo !== $this->anteriorColectivo && $this->anteriorColectivo !== null) {
       $this->anteriorTiempo = $actual;
       $this->anteriorColectivo = $colectivo;
       return true;
@@ -177,17 +177,17 @@ class Tarjeta implements TarjetaInterface {
   public function diferenciaNecesaria($tiempo) {
     $dia = date("D",$tiempo);
     $hora = date("H", $tiempo);
-    if($hora>=22 || $hora<=6) { // Si es de noche hay mas tiempo
+    if ($hora>=22 || $hora<=6) { // Si es de noche hay mas tiempo
       return 90;
-    }else {
-      if($dia == "Sat") { // Si es sabado depende si es de mañana o tarde
-        if($hora<14 && !($this->esFeriado())) { // Aunque tambien puede ser feriado un sabado y entonces hay mas tiempo a la mañana tambien
+    } else {
+      if ($dia == "Sat") { // Si es sabado depende si es de mañana o tarde
+        if ($hora<14 && !($this->esFeriado())) { // Aunque tambien puede ser feriado un sabado y entonces hay mas tiempo a la mañana tambien
           return 60;
-        }else {
+        } else {
           return 90;
         }
       }
-      if($dia == "Sun") { // Los domingos tambien hay mas tiempo
+      if ($dia == "Sun") { // Los domingos tambien hay mas tiempo
         return 90;
       }
       //if($this->esFeriado()) // Y los otros días depende si es feriado

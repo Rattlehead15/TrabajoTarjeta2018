@@ -6,7 +6,7 @@ class MedioBoletoUniversitario extends Tarjeta {
 
     protected $viajesDiarios = 0;
 
-    protected $diaAnterior = NULL;
+    protected $diaAnterior = null;
 
     public function __construct($tiempo) {
         $this->precio = ((new Tarjeta(new TiempoFalso(0)))->precio) / 2;
@@ -22,7 +22,7 @@ class MedioBoletoUniversitario extends Tarjeta {
         } else {
             $this->precio = ((new Tarjeta(new TiempoFalso(0)))->precio) / 2;
         }
-        if (($diferencia >= 300) || $this->anteriorTiempo === NULL) {
+        if (($diferencia >= 300) || $this->anteriorTiempo === null) {
             $resultado = parent::puedePagar($linea, $empresa, $numero);
             if ($resultado != "no") {
                 $this->anteriorTiempo = $actual;
@@ -38,7 +38,7 @@ class MedioBoletoUniversitario extends Tarjeta {
      * Cambia "viejesDiarios" a 0 si nunca se viajo o si ya paso un dia entero desde el ultimo viaje.
      */
     public function cambioDeDia() {
-        if ($this->diaAnterior != NULL) {
+        if ($this->diaAnterior != null) {
             if ((($this->tiempo->time())-($this->diaAnterior)) >= (3600 * 24)) {
                 $this->viajesDiarios = 0;
             }

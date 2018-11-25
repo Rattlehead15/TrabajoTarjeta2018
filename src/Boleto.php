@@ -33,7 +33,6 @@ class Boleto implements BoletoInterface {
                 $this->descripcion = "Abona viajes plus ".($valor*6)." y";
                 break;
         }
-
     }
 
     public function obtenerDescripcion() {
